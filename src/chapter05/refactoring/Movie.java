@@ -2,54 +2,41 @@ package chapter05.refactoring;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 public class Movie {
-    private String title;
-    private Duration runningTime;
-    private Money fee;
-    private List<DiscountCondition> discountConditions;
+    private final Money fee;
+    private final Set<DiscountCondition> discountConditions;
 
-    private MovieType movieType;
-    private Money discountAmount;
-    private double discountPercent;
+    private final MovieType movieType;
+    private final Money discountAmount;
+    private final double discountPercent;
 
     public Money getFee() {
         return fee;
     }
 
-    public void setFee(Money fee) {
-        this.fee = fee;
-    }
-
-    public List<DiscountCondition> getDiscountConditions() {
+    public Set<DiscountCondition> getDiscountConditions() {
         return discountConditions;
-    }
-
-    public void setDiscountConditions(List<DiscountCondition> discountConditions) {
-        this.discountConditions = discountConditions;
     }
 
     public MovieType getMovieType() {
         return movieType;
     }
 
-    public void setMovieType(MovieType movieType) {
-        this.movieType = movieType;
-    }
-
     public Money getDiscountAmount() {
         return discountAmount;
-    }
-
-    public void setDiscountAmount(Money discountAmount) {
-        this.discountAmount = discountAmount;
     }
 
     public double getDiscountPercent() {
         return discountPercent;
     }
 
-    public void setDiscountPercent(double discountPercent) {
+    public Movie(Money fee, Set<DiscountCondition> discountConditions, MovieType movieType, Money discountAmount, double discountPercent) {
+        this.fee = fee;
+        this.discountConditions = discountConditions;
+        this.movieType = movieType;
+        this.discountAmount = discountAmount;
         this.discountPercent = discountPercent;
     }
 }

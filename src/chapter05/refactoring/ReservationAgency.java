@@ -1,37 +1,43 @@
 package chapter05.refactoring;
 
 public class ReservationAgency {
-    public Reservation reserve(Screening screening, Customer customer, int audienceCount) {
-        Movie movie = screening.getMovie();
 
-        boolean discountable = false;
-        for (DiscountCondition condition : movie.getDiscountConditions()) {
-            if (condition.getType() == DiscountConditionType.PERIOD) {
-                discountable = screening.getWhenScreened().getDayOfWeek().equals(condition.getDayOfWeek()) &&
-                        condition.getStartTime().compareTo(screening.getWhenScreened().toLocalTime()) <= 0 &&
-                        condition.getEndTime().compareTo(screening.getWhenScreened().toLocalTime()) >= 0;
-            } else {
-                discountable = condition.getSequence() == screening.getSequence();
-            }
-            if (discountable) {
-                break;
-            }
-        }
-        Money fee = movie.getFee();
+    public Reservation reserve(Screening screening, Customer customer, int audienceCount) {
+        boolean discountable = checkDiscountable(screening);
+        Money fee = calculateFee(screening, discountable, audienceCount);
+        return makeReservation(customer, screening, fee, audienceCount);
+    }
+
+    private boolean checkDiscountable(Screening screening) {
+        return screening.getMovie().getDiscountConditions().stream().anyMatch(condition -> condition.checkCondition(condition, screening));
+    }
+
+    private Money calculateFee(Screening screening, boolean discountable, int audienceCount) {
         if (discountable) {
-            switch (movie.getMovieType()) {
-                case AMOUNT_DISCOUNT:
-                    fee = movie.getFee().minus(movie.getDiscountAmount());
-                    break;
-                case PERCENT_DISCOUNT:
-                    fee = movie.getFee().minus(movie.getFee().times(movie.getDiscountPercent()));
-                    break;
-                case NONE_DISCOUNT:
-                    break;
-                default:
-                    break;
-            }
+            return screening.getMovie().getFee().minus(calculateDiscountedFee(screening.getMovie())).times(audienceCount);
         }
+        return screening.getMovie().getFee().times(audienceCount);
+    }
+
+    private Money calculateDiscountedFee(Movie movie) {
+
+        switch (movie.getMovieType()) {
+            case AMOUNT_DISCOUNT:
+                return movie.getFee().minus(movie.getDiscountAmount());
+
+            case PERCENT_DISCOUNT:
+                return movie.getFee().minus(movie.getFee().times(movie.getDiscountPercent()));
+
+            case NONE_DISCOUNT:
+                return Money.ZERO;
+
+            default:
+                break;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private Reservation makeReservation(Customer customer, Screening screening, Money fee, int audienceCount) {
         return new Reservation(customer, screening, fee, audienceCount);
     }
 }
