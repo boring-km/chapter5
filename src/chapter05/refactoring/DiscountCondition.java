@@ -1,62 +1,47 @@
 package chapter05.refactoring;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
-public class DiscountCondition {
-    private final DiscountConditionType type;
+public interface DiscountCondition {     // 다형성(Polymorphism), Protected Variation
+
+    boolean checkCondition(Screening screening);    // Indirection
+}
+
+class SequenceDiscountCondition implements DiscountCondition {
+
     private final int sequence;
-    private final DayOfWeek dayOfWeek;
-    private final LocalTime startTime;
-    private final LocalTime endTime;
 
-    public DiscountConditionType getType() {
-        return type;
-    }
-
-    public int getSequence() {
-        return sequence;
-    }
-
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public DiscountCondition(DiscountConditionType type, int sequence, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
-        this.type = type;
+    SequenceDiscountCondition(int sequence) {
         this.sequence = sequence;
-        this.dayOfWeek = dayOfWeek;
+    }
+
+    @Override
+    public boolean checkCondition(Screening screening) {
+        return checkSequenceCondition(screening);
+    }
+
+    private boolean checkSequenceCondition(Screening screening) {
+        return sequence == screening.getSequence();
+    }
+}
+
+class PeriodDiscountCondition implements DiscountCondition {
+
+    private final LocalDateTime startTime;
+    private final LocalDateTime endTime;
+
+    public PeriodDiscountCondition(LocalDateTime startTime, LocalDateTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public boolean checkCondition(DiscountCondition condition, Screening screening) {
-        if (condition.getType() == DiscountConditionType.PERIOD) {
-            return checkPeriodCondition(condition, screening);
-        }
-        return checkSequenceCondition(condition, screening);
+    @Override
+    public boolean checkCondition(Screening screening) {
+        return checkPeriodCondition(screening);
     }
 
-    private boolean checkPeriodCondition(DiscountCondition condition, Screening screening) {
-        return screening.getWhenScreened().getDayOfWeek().equals(condition.getDayOfWeek()) &&
-                condition.getStartTime().compareTo(screening.getWhenScreened().toLocalTime()) <= 0 &&
-                condition.getEndTime().compareTo(screening.getWhenScreened().toLocalTime()) >= 0;
+    private boolean checkPeriodCondition(Screening screening) {
+        return startTime.isBefore(screening.getWhenScreened()) &&
+                endTime.isAfter(screening.getWhenScreened());
     }
-
-    private boolean checkSequenceCondition(DiscountCondition condition, Screening screening) {
-        return condition.getSequence() == screening.getSequence();
-    }
-}
-
-enum DiscountConditionType {
-    SEQUENCE,
-    PERIOD
 }

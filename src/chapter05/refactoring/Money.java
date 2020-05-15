@@ -28,7 +28,11 @@ public class Money {
         return amount.compareTo(other.amount) < 0;
     }
 
-    public boolean isGreaterThanOrEqual(Money other) {
-        return amount.compareTo(other.amount) >= 0;
+    public boolean isGreaterThan(Money other) {
+        return amount.compareTo(other.amount) > 0;
+    }
+
+    public boolean isEqual(Money other) {
+        return amount.compareTo(other.amount) == 0;
     }
 }

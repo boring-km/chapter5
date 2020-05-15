@@ -1,10 +1,27 @@
 package chapter05.refactoring;
 
 public class Reservation {
+
     private final Customer customer;
     private final Screening screening;
     private final Money fee;
     private final int audienceCount;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Screening getScreening() {
+        return screening;
+    }
+
+    public Money getFee() {
+        return fee;
+    }
+
+    public int getAudienceCount() {
+        return audienceCount;
+    }
 
     public Reservation(Customer customer, Screening screening, Money fee, int audienceCount) {
         this.customer = customer;
@@ -12,5 +29,6 @@ public class Reservation {
         this.fee = fee;
         this.audienceCount = audienceCount;
     }
+
 
 }

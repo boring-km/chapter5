@@ -1,48 +1,62 @@
 package chapter05.refactoring;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 
-public class Movie {
+public abstract class Movie { // Protected Variation
     private final Money fee;
     private final Set<DiscountCondition> discountConditions;
 
-    private final MovieType movieType;
-    private final Money discountAmount;
-    private final double discountPercent;
-
-    public Money getFee() {
-        return fee;
-    }
-
-    public Set<DiscountCondition> getDiscountConditions() {
-        return discountConditions;
-    }
-
-    public MovieType getMovieType() {
-        return movieType;
-    }
-
-    public Money getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public double getDiscountPercent() {
-        return discountPercent;
-    }
-
-    public Movie(Money fee, Set<DiscountCondition> discountConditions, MovieType movieType, Money discountAmount, double discountPercent) {
+    public Movie(Money fee, Set<DiscountCondition> discountConditions) {
         this.fee = fee;
         this.discountConditions = discountConditions;
-        this.movieType = movieType;
+    }
+
+    public Money calculateDiscountableFee(Screening screening, int audienceCount) {
+        boolean discountable = checkCondition(screening);
+        return calculateFee(fee, discountable, audienceCount);
+    }
+
+    // 영화 할인 여부를 판단하기에 필요한 정보를 갖고 있는 DiscountCondition에게 책임을 할당 [책임할당 3]
+    private boolean checkCondition(Screening screening) {
+        return discountConditions.stream().anyMatch(condition -> condition.checkCondition(screening));
+    }
+
+    private Money calculateFee(Money fee, boolean discountable, int audienceCount) {
+        if (discountable) {
+            return calculate(fee).times(audienceCount);
+        }
+        return fee.times(audienceCount);
+    }
+
+    protected abstract Money calculate(Money fee);
+}
+// 다형성(Polymorphism)
+class AmountDiscountMovie extends Movie {
+
+    private final Money discountAmount;
+
+    public AmountDiscountMovie(Money fee, Set<DiscountCondition> discountConditions, Money discountAmount) {
+        super(fee, discountConditions);
         this.discountAmount = discountAmount;
-        this.discountPercent = discountPercent;
+    }
+
+    @Override
+    public Money calculate(Money fee) {
+        return fee.minus(discountAmount);
     }
 }
+// 다형성(Polymorphism)
+class PercentDiscountMovie extends Movie {
 
-enum MovieType {
-    AMOUNT_DISCOUNT,
-    PERCENT_DISCOUNT,
-    NONE_DISCOUNT
+    private final double discountPercent;
+
+    public PercentDiscountMovie(Money fee, Set<DiscountCondition> discountConditions, double discountPercent) {
+        super(fee, discountConditions);
+        this.discountPercent = discountPercent;
+    }
+
+    @Override
+    public Money calculate(Money fee) {
+        return fee.minus(fee.times(discountPercent));
+    }
 }
