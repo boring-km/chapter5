@@ -20,13 +20,15 @@ public class ReservationTest {
 
         amountDiscountReservation = new ReservationAgency().reserve(
                 new Screening(
-                        new AmountDiscountMovie (
+                        new Movie(
                                 Money.wons(10000),
-                                Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
-                                        LocalDateTime.of(2020, 5, 15, 13, 0),
-                                        LocalDateTime.of(2020, 5, 15, 15, 30)
-                                )).collect(Collectors.toSet()),
-                                Money.wons(1000)
+                                new AmountDiscountPolicy(
+                                        Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
+                                                LocalDateTime.of(2020, 5, 15, 13, 0),
+                                                LocalDateTime.of(2020, 5, 15, 15, 30)
+                                        )).collect(Collectors.toSet()),
+                                        Money.wons(1000)
+                                )
                         ),
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)
@@ -35,13 +37,15 @@ public class ReservationTest {
 
         percentDiscountReservation = new ReservationAgency().reserve(
                 new Screening(
-                        new PercentDiscountMovie(
+                        new Movie(
                                 Money.wons(10000),
-                                Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
-                                        LocalDateTime.of(2020, 5, 15, 13, 0),
-                                        LocalDateTime.of(2020, 5, 15, 15, 30)
-                                )).collect(Collectors.toSet()),
-                                0.1
+                                new PercentDiscountPolicy(
+                                        Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
+                                                LocalDateTime.of(2020, 5, 15, 13, 0),
+                                                LocalDateTime.of(2020, 5, 15, 15, 30)
+                                        )).collect(Collectors.toSet()),
+                                        0.1
+                                )
                         ),
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)

@@ -23,13 +23,13 @@ public class Screening {
     }
 
     public Reservation makeReservation(Customer customer, int audienceCount) {
-        Money fee = calculateDiscountableFee(audienceCount);
+        Money fee = getFee(audienceCount);
         return createReservation(customer, this, fee, audienceCount);
     }
 
     // 정보 전문가 - 예매가격 계산에 대해 필요한 정보를 알고 있는 Movie에게 책임을 할당 [책임할당 2]
-    private Money calculateDiscountableFee(int audienceCount) {
-        return movie.calculateDiscountableFee(this, audienceCount);
+    private Money getFee(int audienceCount) {
+        return movie.calculteFee(this, audienceCount);
     }
 
     // Creator - 예매정보에 대해 가장 잘 알고 있는 Screening 객체에서 Reservation 객체를 생성한다.

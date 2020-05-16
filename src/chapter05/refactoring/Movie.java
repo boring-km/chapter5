@@ -1,62 +1,19 @@
 package chapter05.refactoring;
 
-import java.util.Set;
-
-public abstract class Movie { // Protected Variation
+public class Movie {
     private final Money fee;
-    private final Set<DiscountCondition> discountConditions;
+    private DiscountPolicy discountPolicy;
 
-    public Movie(Money fee, Set<DiscountCondition> discountConditions) {
+    public Movie(Money fee, DiscountPolicy discountPolicy) {
         this.fee = fee;
-        this.discountConditions = discountConditions;
+        this.discountPolicy = discountPolicy;
     }
 
-    public Money calculateDiscountableFee(Screening screening, int audienceCount) {
-        boolean discountable = checkCondition(screening);
-        return calculateFee(fee, discountable, audienceCount);
+    public Money calculteFee(Screening screening, int audienceCount) {
+        return discountPolicy.apply(screening, audienceCount, fee);
     }
 
-    // 영화 할인 여부를 판단하기에 필요한 정보를 갖고 있는 DiscountCondition에게 책임을 할당 [책임할당 3]
-    private boolean checkCondition(Screening screening) {
-        return discountConditions.stream().anyMatch(condition -> condition.checkCondition(screening));
-    }
-
-    private Money calculateFee(Money fee, boolean discountable, int audienceCount) {
-        if (discountable) {
-            return calculate(fee).times(audienceCount);
-        }
-        return fee.times(audienceCount);
-    }
-
-    protected abstract Money calculate(Money fee);
-}
-// 다형성(Polymorphism)
-class AmountDiscountMovie extends Movie {
-
-    private final Money discountAmount;
-
-    public AmountDiscountMovie(Money fee, Set<DiscountCondition> discountConditions, Money discountAmount) {
-        super(fee, discountConditions);
-        this.discountAmount = discountAmount;
-    }
-
-    @Override
-    public Money calculate(Money fee) {
-        return fee.minus(discountAmount);
-    }
-}
-// 다형성(Polymorphism)
-class PercentDiscountMovie extends Movie {
-
-    private final double discountPercent;
-
-    public PercentDiscountMovie(Money fee, Set<DiscountCondition> discountConditions, double discountPercent) {
-        super(fee, discountConditions);
-        this.discountPercent = discountPercent;
-    }
-
-    @Override
-    public Money calculate(Money fee) {
-        return fee.minus(fee.times(discountPercent));
+    public void changeDiscountPolicy(DiscountPolicy discountPolicy) {   // 할인 정책을 분리하여 영화의 할인 정책이 유연하게 바뀌도록 설계가 바뀌었다.
+        this.discountPolicy = discountPolicy;
     }
 }

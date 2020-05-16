@@ -29,6 +29,4 @@ public class Reservation {
         this.fee = fee;
         this.audienceCount = audienceCount;
     }
-
-
 }

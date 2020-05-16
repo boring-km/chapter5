@@ -18,13 +18,15 @@ public class ScreeningTest {
 
     @Before
     public void 상영정보초기화() {
-        Movie movie = new AmountDiscountMovie(
+        Movie movie = new Movie(
                 Money.wons(10000),
-                Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
-                        LocalDateTime.of(2020, 5, 15, 13, 0),
-                        LocalDateTime.of(2020, 5, 15, 15, 30)
-                )).collect(Collectors.toSet()),
-                Money.wons(1000)
+                new AmountDiscountPolicy(
+                        Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
+                                LocalDateTime.of(2020, 5, 15, 13, 0),
+                                LocalDateTime.of(2020, 5, 15, 15, 30)
+                        )).collect(Collectors.toSet()),
+                        Money.wons(1000)
+                )
         );
         sequence = 2;
         whenScreened = LocalDateTime.of(2020, 5, 15, 17, 50);

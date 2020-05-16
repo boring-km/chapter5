@@ -14,13 +14,15 @@ public class ReservationAgencyTest {
     public void 예매하기테스트() {
         assertNotNull(new ReservationAgency().reserve(
                 new Screening(
-                        new AmountDiscountMovie (
+                        new Movie(
                                 Money.wons(10000),
-                                Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
-                                        LocalDateTime.of(2020, 5, 15, 13, 0),
-                                        LocalDateTime.of(2020, 5, 15, 15, 30)
-                                )).collect(Collectors.toSet()),
-                                Money.wons(1000)
+                                new AmountDiscountPolicy(
+                                        Stream.of(new SequenceDiscountCondition(2), new PeriodDiscountCondition(
+                                                LocalDateTime.of(2020, 5, 15, 13, 0),
+                                                LocalDateTime.of(2020, 5, 15, 15, 30)
+                                        )).collect(Collectors.toSet()),
+                                        Money.wons(1000)
+                                )
                         ),
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)
