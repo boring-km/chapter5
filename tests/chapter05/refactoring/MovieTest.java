@@ -43,7 +43,7 @@ public class MovieTest {
     @Test
     public void 금액할인된가격계산() {
         assertTrue(Money.wons(9000).isEqual(
-                amountDiscountMovie.calculteFee(new Screening(
+                amountDiscountMovie.calculateFee(new Screening(
                         amountDiscountMovie,
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)
@@ -54,7 +54,7 @@ public class MovieTest {
     @Test
     public void 비율할인된가격계산() {
         assertTrue(Money.wons(9000).isEqual(
-                percentDiscountMovie.calculteFee(new Screening(
+                percentDiscountMovie.calculateFee(new Screening(
                         percentDiscountMovie,
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)
@@ -73,7 +73,7 @@ public class MovieTest {
         ));
 
         assertTrue(Money.wons(8000).isEqual(
-                amountDiscountMovie.calculteFee(new Screening(
+                amountDiscountMovie.calculateFee(new Screening(
                         amountDiscountMovie,
                         2,
                         LocalDateTime.of(2020, 5, 15, 14, 0)

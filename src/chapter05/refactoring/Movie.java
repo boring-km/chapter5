@@ -9,8 +9,8 @@ public class Movie {
         this.discountPolicy = discountPolicy;
     }
 
-    public Money calculteFee(Screening screening, int audienceCount) {
-        return discountPolicy.apply(screening, audienceCount, fee);
+    public Money calculateFee(Screening screening, int audienceCount) {
+        return discountPolicy.calculateFee(screening, audienceCount, fee);
     }
 
     public void changeDiscountPolicy(DiscountPolicy discountPolicy) {   // 할인 정책을 분리하여 영화의 할인 정책이 유연하게 바뀌도록 설계가 바뀌었다.

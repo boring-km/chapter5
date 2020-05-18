@@ -3,7 +3,7 @@ package chapter05.refactoring;
 import java.util.Set;
 
 public interface DiscountPolicy {       // 상속 보단 합성
-    Money apply(Screening screening, int audienceCount, Money fee);
+    Money calculateFee(Screening screening, int audienceCount, Money fee);
 }
 
 abstract class DefaultDiscountPolicy implements DiscountPolicy {
@@ -15,7 +15,7 @@ abstract class DefaultDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public Money apply(Screening screening, int audienceCount, Money fee) {
+    public Money calculateFee(Screening screening, int audienceCount, Money fee) {
         boolean discountable = checkCondition(screening);
         return getCalculatedFee(fee, discountable, audienceCount);
     }

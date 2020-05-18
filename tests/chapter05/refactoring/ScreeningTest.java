@@ -35,7 +35,7 @@ public class ScreeningTest {
     }
 
     @Test
-    public void 예매정보생성하기() {
+    public void 고객이_관람객2명을_예매하면_결과값이_null이_아니다() {
         Customer customer = new Customer("진강민", "testid-1001");
         int audienceCount = 2;
         assertNotNull(screening.makeReservation(customer, audienceCount));
