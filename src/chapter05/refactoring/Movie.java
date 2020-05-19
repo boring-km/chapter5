@@ -1,19 +1,27 @@
 package chapter05.refactoring;
 
-public class Movie {
-    private final Money fee;
-    private DiscountPolicy discountPolicy;
+import java.time.LocalDateTime;
 
-    public Movie(Money fee, DiscountPolicy discountPolicy) {
-        this.fee = fee;
-        this.discountPolicy = discountPolicy;
+public interface Movie {
+    Reservation makeReservation(Customer customer, int audienceCount);
+}
+
+class Screening {
+
+    private final int sequence;
+    private final LocalDateTime whenScreened;
+
+    public Screening(int sequence, LocalDateTime whenScreened) {
+        this.sequence = sequence;
+        this.whenScreened = whenScreened;
     }
 
-    public Money calculateFee(Screening screening, int audienceCount) {
-        return discountPolicy.calculateFee(screening, audienceCount, fee);
+    public int getSequence() {
+        return sequence;
     }
 
-    public void changeDiscountPolicy(DiscountPolicy discountPolicy) {   // 할인 정책을 분리하여 영화의 할인 정책이 유연하게 바뀌도록 설계가 바뀌었다.
-        this.discountPolicy = discountPolicy;
+    public LocalDateTime getWhenScreened() {
+        return whenScreened;
     }
+
 }

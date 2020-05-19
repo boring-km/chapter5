@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class Money {
     private final BigDecimal amount; // State Pattern?
+    public static final Money ZERO = Money.wons(0);
 
     public Money(BigDecimal amount) {
         this.amount = amount;
